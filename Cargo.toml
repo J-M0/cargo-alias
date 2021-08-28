@@ -7,4 +7,5 @@ edition = "2018"
 
 [dependencies]
 anyhow = "1.0.43"
+structopt = "0.3.22"
 toml_edit = "0.2.1"

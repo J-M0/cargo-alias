@@ -3,11 +3,21 @@ use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 use toml_edit::{Document, Item, Value};
+use structopt::StructOpt;
+
+#[derive(Debug, StructOpt)]
+#[structopt(bin_name = "cargo alias", about)]
+struct Opt {
+    /// Alias to define. Should be in the form name='command list'
+    alias: Option<String>
+}
 
 fn main() -> anyhow::Result<()> {
     let user_config = PathBuf::from(env::var("CARGO_HOME")?).join("config.toml");
     let current_config = env::current_dir()?;
     let cargo_config = Path::new(".cargo").join("config.toml");
+
+    let opt = Opt::from_args();
 
     // for ans in current_config.ancestors() {
     //     println!("{:?}", ans.join(&cargo_config));
