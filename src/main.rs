@@ -1,17 +1,17 @@
 use anyhow::bail;
-use std::path::{Path, PathBuf};
 use std::env;
-use toml_edit::Document;
 use std::fs;
+use std::path::{Path, PathBuf};
+use toml_edit::{Document, Item, Value};
 
 fn main() -> anyhow::Result<()> {
     let user_config = PathBuf::from(env::var("CARGO_HOME")?).join("config.toml");
     let current_config = env::current_dir()?;
     let cargo_config = Path::new(".cargo").join("config.toml");
 
-    for ans in current_config.ancestors() {
-        println!("{:?}", ans.join(&cargo_config));
-    }
+    // for ans in current_config.ancestors() {
+    //     println!("{:?}", ans.join(&cargo_config));
+    // }
 
     if user_config.exists() && user_config.is_dir() {
         bail!("User config is a directory");
@@ -19,6 +19,27 @@ fn main() -> anyhow::Result<()> {
 
     let config: Document = fs::read_to_string(user_config)?.parse()?;
 
+    for alias in config["alias"].as_table().unwrap().iter() {
+        let (alias_name, val) = alias;
+        let val = match val {
+            Item::Value(v) => v,
+            _ => bail!("value of {} must be a list or string", alias_name),
+        };
+        match val {
+            Value::String(_) => println!("alias='{}'", val.as_str().unwrap()),
+            Value::Array(_) => {
+                let val = val
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|i| i.as_str().unwrap())
+                    .collect::<Vec<&str>>()
+                    .join(" ");
+                println!("alias='{}'", val);
+            }
+            _ => bail!("value of {} is not a list or string", alias_name),
+        }
+    }
 
     Ok(())
 }
