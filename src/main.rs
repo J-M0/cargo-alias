@@ -2,14 +2,14 @@ use anyhow::bail;
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
-use toml_edit::{Document, Item, Value, value};
 use structopt::StructOpt;
+use toml_edit::{value, Document, Item, Value};
 
 #[derive(Debug, StructOpt)]
 #[structopt(bin_name = "cargo alias", about = "Create and view cargo aliases")]
 struct Opt {
     /// Alias to define. Should be in the form name='command list'
-    alias: Option<String>
+    alias: Option<String>,
 }
 
 fn main() -> anyhow::Result<()> {
@@ -31,7 +31,7 @@ fn main() -> anyhow::Result<()> {
 
     if let Some(new_alias) = opt.alias {
         let (alias, commands) = new_alias.split_once("=").unwrap();
-        config["alias"][&alias]  = value(commands);
+        config["alias"][&alias] = value(commands);
         fs::write(user_config, config.to_string_in_original_order())?;
     } else {
         print_aliases(config)?;
