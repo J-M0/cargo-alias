@@ -29,6 +29,12 @@ fn main() -> anyhow::Result<()> {
 
     let config: Document = fs::read_to_string(user_config)?.parse()?;
 
+    print_aliases(config)?;
+
+    Ok(())
+}
+
+fn print_aliases(config: Document) -> anyhow::Result<()> {
     for alias in config["alias"].as_table().unwrap().iter() {
         let (alias_name, val) = alias;
         let val = match val {
