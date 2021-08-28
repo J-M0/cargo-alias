@@ -6,7 +6,7 @@ use toml_edit::{Document, Item, Value};
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
-#[structopt(bin_name = "cargo alias", about)]
+#[structopt(bin_name = "cargo alias", about = "Create and view cargo aliases")]
 struct Opt {
     /// Alias to define. Should be in the form name='command list'
     alias: Option<String>
