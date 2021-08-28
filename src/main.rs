@@ -2,7 +2,7 @@ use anyhow::bail;
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
-use toml_edit::{Document, Item, Value};
+use toml_edit::{Document, Item, Value, value};
 use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
@@ -27,9 +27,15 @@ fn main() -> anyhow::Result<()> {
         bail!("User config is a directory");
     }
 
-    let config: Document = fs::read_to_string(user_config)?.parse()?;
+    let mut config: Document = fs::read_to_string(&user_config)?.parse()?;
 
-    print_aliases(config)?;
+    if let Some(new_alias) = opt.alias {
+        let (alias, commands) = new_alias.split_once("=").unwrap();
+        config["alias"][&alias]  = value(commands);
+        fs::write(user_config, config.to_string_in_original_order())?;
+    } else {
+        print_aliases(config)?;
+    }
 
     Ok(())
 }
