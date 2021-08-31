@@ -1,10 +1,14 @@
 [package]
 name = "cargo-alias"
 version = "0.1.0"
+authors = ["James Morris <jamesmorris2@gmail.com>"]
 edition = "2018"
+description = "Easily view, create, and delete cargo aliases"
+readme = "README.md"
+repository = "https://github.com/J-M0/cargo-alias"
 license = "MIT OR Apache-2.0"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+keywords = ["cargo-subcommand", "alias", "unalias"]
+categories = ["command-line-utilities", "development-tools::cargo-plugins"]
 
 [dependencies]
 anyhow = "1.0.43"
