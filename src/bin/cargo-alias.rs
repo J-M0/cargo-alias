@@ -52,7 +52,7 @@ fn print_aliases(config: Document) -> anyhow::Result<()> {
             _ => bail!("value of {} must be a list or string", alias_name),
         };
         match val {
-            Value::String(_) => println!("alias {}='{}'", alias_name, val.as_str().unwrap()),
+            Value::String(_) => println!("cargo alias {}='{}'", alias_name, val.as_str().unwrap()),
             Value::Array(_) => {
                 let val = val
                     .as_array()
@@ -61,7 +61,7 @@ fn print_aliases(config: Document) -> anyhow::Result<()> {
                     .map(|i| i.as_str().unwrap())
                     .collect::<Vec<&str>>()
                     .join(" ");
-                println!("alias {}='{}'", alias_name, val);
+                println!("cargo alias {}='{}'", alias_name, val);
             }
             _ => bail!("value of {} is not a list or string", alias_name),
         }
