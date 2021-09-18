@@ -23,7 +23,15 @@ fn main() -> anyhow::Result<()> {
     //     println!("{:?}", ans.join(&cargo_config));
     // }
 
-    let mut config: Document = fs::read_to_string(&user_config)?.parse()?;
+    let mut config: Document = match fs::read_to_string(&user_config) {
+        Ok(string) => string.parse()?,
+        Err(_) => {
+            let mut doc = Document::new();
+            doc["alias"] = toml_edit::table();
+
+            doc
+        }
+    };
 
     if let Some(new_alias) = opt.alias {
         let (alias, commands) = new_alias.split_once("=").unwrap();
