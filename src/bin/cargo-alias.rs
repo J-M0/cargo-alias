@@ -23,10 +23,6 @@ fn main() -> anyhow::Result<()> {
     //     println!("{:?}", ans.join(&cargo_config));
     // }
 
-    if user_config.exists() && user_config.is_dir() {
-        bail!("User config is a directory");
-    }
-
     let mut config: Document = fs::read_to_string(&user_config)?.parse()?;
 
     if let Some(new_alias) = opt.alias {
