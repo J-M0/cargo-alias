@@ -23,11 +23,15 @@ fn main() -> anyhow::Result<()> {
     //     println!("{:?}", ans.join(&cargo_config));
     // }
 
-    if user_config.exists() && user_config.is_dir() {
-        bail!("User config is a directory");
-    }
+    let mut config: Document = match fs::read_to_string(&user_config) {
+        Ok(string) => string.parse()?,
+        Err(_) => {
+            let mut doc = Document::new();
+            doc["alias"] = toml_edit::table();
 
-    let mut config: Document = fs::read_to_string(&user_config)?.parse()?;
+            doc
+        }
+    };
 
     if let Some(new_alias) = opt.alias {
         let (alias, commands) = new_alias.split_once("=").unwrap();
@@ -48,7 +52,7 @@ fn print_aliases(config: Document) -> anyhow::Result<()> {
             _ => bail!("value of {} must be a list or string", alias_name),
         };
         match val {
-            Value::String(_) => println!("alias {}='{}'", alias_name, val.as_str().unwrap()),
+            Value::String(_) => println!("cargo alias {}='{}'", alias_name, val.as_str().unwrap()),
             Value::Array(_) => {
                 let val = val
                     .as_array()
@@ -57,7 +61,7 @@ fn print_aliases(config: Document) -> anyhow::Result<()> {
                     .map(|i| i.as_str().unwrap())
                     .collect::<Vec<&str>>()
                     .join(" ");
-                println!("alias {}='{}'", alias_name, val);
+                println!("cargo alias {}='{}'", alias_name, val);
             }
             _ => bail!("value of {} is not a list or string", alias_name),
         }
