@@ -17,7 +17,7 @@ fn main() -> anyhow::Result<()> {
     let current_config = env::current_dir()?;
     let cargo_config = Path::new(".cargo").join("config.toml");
 
-    let opt = Opt::from_args();
+    let opt = Opt::from_iter(env::args_os().filter(|arg| arg != "alias"));
 
     // for ans in current_config.ancestors() {
     //     println!("{:?}", ans.join(&cargo_config));

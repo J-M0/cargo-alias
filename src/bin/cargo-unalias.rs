@@ -12,7 +12,7 @@ struct Opt {
 }
 
 fn main() -> anyhow::Result<()> {
-    let opt = Opt::from_args();
+    let opt = Opt::from_iter(env::args_os().filter(|arg| arg != "unalias"));
 
     let cargo_home_config = PathBuf::from(env::var("CARGO_HOME")?).join("config.toml");
 
