@@ -1,12 +1,18 @@
 use anyhow::bail;
+use clap::Parser;
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
-use structopt::StructOpt;
 use toml_edit::{value, Document, Item, Value};
 
-#[derive(Debug, StructOpt)]
-#[structopt(bin_name = "cargo alias", about = "Create and view cargo aliases")]
+#[derive(Parser)]
+#[clap(name = "cargo", bin_name = "cargo")]
+enum Cargo {
+    Alias(Opt),
+}
+
+#[derive(clap::Args)]
+#[clap(about = "Create and view cargo aliases", version)]
 struct Opt {
     /// Alias to define. Should be in the form name='command list'
     alias: Option<String>,
@@ -17,7 +23,7 @@ fn main() -> anyhow::Result<()> {
     let current_config = env::current_dir()?;
     let cargo_config = Path::new(".cargo").join("config.toml");
 
-    let opt = Opt::from_args();
+    let Cargo::Alias(opt) = Cargo::parse();
 
     // for ans in current_config.ancestors() {
     //     println!("{:?}", ans.join(&cargo_config));

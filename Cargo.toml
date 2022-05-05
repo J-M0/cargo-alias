@@ -12,5 +12,5 @@ categories = ["command-line-utilities", "development-tools::cargo-plugins"]
 
 [dependencies]
 anyhow = "1.0.43"
-structopt = "0.3.22"
+clap = { version = "3.1.15", features = ["derive"] }
 toml_edit = "0.2.1"
