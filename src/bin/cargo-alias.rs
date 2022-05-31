@@ -25,13 +25,12 @@ fn main() -> anyhow::Result<()> {
 
     let mut config: Document = match fs::read_to_string(&user_config) {
         Ok(string) => string.parse()?,
-        Err(_) => {
-            let mut doc = Document::new();
-            doc["alias"] = toml_edit::table();
-
-            doc
-        }
+        Err(_) => Document::new(),
     };
+
+    if config["alias"].as_table().is_none() {
+        config["alias"] = toml_edit::table();
+    }
 
     if let Some(new_alias) = opt.alias {
         let (alias, commands) = new_alias.split_once("=").unwrap();
