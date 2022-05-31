@@ -28,7 +28,7 @@ fn main() -> anyhow::Result<()> {
         Err(_) => Document::new(),
     };
 
-    if let None = config["alias"].as_table() {
+    if config["alias"].as_table().is_none() {
         config["alias"] = toml_edit::table();
     }
 
