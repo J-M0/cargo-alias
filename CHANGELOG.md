@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.2.1
+
+### Bugs fixed
+
+- Panic with empty config.toml (thanks @IkaR49!) #1
+- Crashes when run as a cargo subcommand #2
+
+### Dependencies updated
+
+- structopt replaced with clap 3
+- toml_edit updated to 0.14.4
+
 ## v0.2.0
 
 ### Changes
