@@ -24,7 +24,7 @@ fn main() -> anyhow::Result<()> {
 
     let mut config: Document = fs::read_to_string(&cargo_home_config)?.parse()?;
     config["alias"].as_table_mut().unwrap().remove(&opt.alias);
-    fs::write(cargo_home_config, config.to_string_in_original_order())?;
+    fs::write(cargo_home_config, config.to_string())?;
 
     Ok(())
 }
