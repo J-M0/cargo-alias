@@ -1,12 +1,18 @@
 use anyhow::bail;
+use clap::Parser;
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
-use structopt::StructOpt;
 use toml_edit::{value, Document, Item, Value};
 
-#[derive(Debug, StructOpt)]
-#[structopt(bin_name = "cargo alias", about = "Create and view cargo aliases")]
+#[derive(Parser)]
+#[clap(name = "cargo", bin_name = "cargo")]
+enum Cargo {
+    Alias(Opt),
+}
+
+#[derive(clap::Args)]
+#[clap(about = "Create and view cargo aliases", version)]
 struct Opt {
     /// Alias to define. Should be in the form name='command list'
     alias: Option<String>,
@@ -17,7 +23,7 @@ fn main() -> anyhow::Result<()> {
     let current_config = env::current_dir()?;
     let cargo_config = Path::new(".cargo").join("config.toml");
 
-    let opt = Opt::from_args();
+    let Cargo::Alias(opt) = Cargo::parse();
 
     // for ans in current_config.ancestors() {
     //     println!("{:?}", ans.join(&cargo_config));
@@ -25,18 +31,17 @@ fn main() -> anyhow::Result<()> {
 
     let mut config: Document = match fs::read_to_string(&user_config) {
         Ok(string) => string.parse()?,
-        Err(_) => {
-            let mut doc = Document::new();
-            doc["alias"] = toml_edit::table();
-
-            doc
-        }
+        Err(_) => Document::new(),
     };
+
+    if config["alias"].as_table().is_none() {
+        config["alias"] = toml_edit::table();
+    }
 
     if let Some(new_alias) = opt.alias {
         let (alias, commands) = new_alias.split_once("=").unwrap();
         config["alias"][&alias] = value(commands);
-        fs::write(user_config, config.to_string_in_original_order())?;
+        fs::write(user_config, config.to_string())?;
     } else {
         print_aliases(config)?;
     }
