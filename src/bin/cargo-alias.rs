@@ -39,7 +39,10 @@ fn main() -> anyhow::Result<()> {
     }
 
     if let Some(new_alias) = opt.alias {
-        let (alias, commands) = new_alias.split_once("=").unwrap();
+        let (alias, commands) = match new_alias.split_once("=") {
+            Some(pair) => pair,
+            None => bail!("Use the `cargo alias {}='<value>'` format.", new_alias),
+        };
         config["alias"][&alias] = value(commands);
         fs::write(user_config, config.to_string())?;
     } else {
