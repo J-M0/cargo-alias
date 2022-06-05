@@ -1,6 +1,6 @@
 [package]
 name = "cargo-alias"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["James Morris <jamesmorris2@gmail.com>"]
 edition = "2018"
 description = "Easily view, create, and delete cargo aliases"
