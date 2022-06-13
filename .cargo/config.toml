@@ -1,0 +1,3 @@
+[alias]
+ra = "run --bin cargo-alias -- alias"
+ru = "run --bin cargo-unalias -- unalias"
