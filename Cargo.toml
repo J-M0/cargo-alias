@@ -13,4 +13,13 @@ categories = ["command-line-utilities", "development-tools::cargo-plugins"]
 [dependencies]
 anyhow = "1.0.43"
 clap = { version = "3.1.15", features = ["derive"] }
+lazy_static = "1.4.0"
 toml_edit = "0.14.4"
+
+[[bin]]
+name = "cargo-alias"
+path = "src/cargo-alias.rs"
+
+[[bin]]
+name = "cargo-unalias"
+path = "src/cargo-unalias.rs"

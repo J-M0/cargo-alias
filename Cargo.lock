@@ -43,6 +43,7 @@ version = "0.2.1"
 dependencies = [
  "anyhow",
  "clap",
+ "lazy_static",
  "toml_edit",
 ]
 

@@ -1,8 +1,9 @@
+mod util;
+
 use clap::Parser;
-use std::env;
 use std::fs;
-use std::path::PathBuf;
 use toml_edit::Document;
+use util::CARGO_HOME;
 
 #[derive(Parser)]
 #[clap(name = "cargo", bin_name = "cargo")]
@@ -20,13 +21,11 @@ struct Opt {
 fn main() -> anyhow::Result<()> {
     let Cargo::Unalias(opt) = Cargo::parse();
 
-    let cargo_home_config = PathBuf::from(env::var("CARGO_HOME")?).join("config.toml");
-
-    let mut config: Document = fs::read_to_string(&cargo_home_config)?.parse()?;
+    let mut config: Document = fs::read_to_string(&*CARGO_HOME)?.parse()?;
 
     if config.contains_table("alias") {
         config["alias"].as_table_mut().unwrap().remove(&opt.alias);
-        fs::write(cargo_home_config, config.to_string())?;
+        fs::write(&*CARGO_HOME, config.to_string())?;
     }
 
     Ok(())
