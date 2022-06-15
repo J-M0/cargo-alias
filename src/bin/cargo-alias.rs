@@ -2,7 +2,7 @@ use anyhow::bail;
 use clap::Parser;
 use std::env;
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use toml_edit::{value, Document, Item, Value};
 
 #[derive(Parser)]
@@ -20,14 +20,8 @@ struct Opt {
 
 fn main() -> anyhow::Result<()> {
     let user_config = PathBuf::from(env::var("CARGO_HOME")?).join("config.toml");
-    let current_config = env::current_dir()?;
-    let cargo_config = Path::new(".cargo").join("config.toml");
 
     let Cargo::Alias(opt) = Cargo::parse();
-
-    // for ans in current_config.ancestors() {
-    //     println!("{:?}", ans.join(&cargo_config));
-    // }
 
     let mut config: Document = match fs::read_to_string(&user_config) {
         Ok(string) => string.parse()?,
