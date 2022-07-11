@@ -45,24 +45,23 @@ fn main() -> anyhow::Result<()> {
 fn print_aliases(config: Document) -> anyhow::Result<()> {
     for alias in config["alias"].as_table().unwrap().iter() {
         let (alias_name, val) = alias;
+
         let val = match val {
             Item::Value(v) => v,
             _ => bail!("value of {} must be a list or string", alias_name),
         };
-        match val {
-            Value::String(_) => println!("cargo alias {}='{}'", alias_name, val.as_str().unwrap()),
-            Value::Array(_) => {
-                let val = val
-                    .as_array()
-                    .unwrap()
-                    .iter()
-                    .map(|i| i.as_str().unwrap())
-                    .collect::<Vec<&str>>()
-                    .join(" ");
-                println!("cargo alias {}='{}'", alias_name, val);
-            }
+
+        let val = match val {
+            Value::String(s) => s.value().into(),
+            Value::Array(a) => a
+                .iter()
+                .map(|i| i.as_str().unwrap())
+                .collect::<Vec<&str>>()
+                .join(" "),
             _ => bail!("value of {} is not a list or string", alias_name),
-        }
+        };
+
+        println!("alias {}='{}'", alias_name, val);
     }
 
     Ok(())
