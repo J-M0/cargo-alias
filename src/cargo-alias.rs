@@ -22,7 +22,7 @@ struct Opt {
 fn main() -> anyhow::Result<()> {
     let Cargo::Alias(opt) = Cargo::parse();
 
-    let mut config: Document = match fs::read_to_string(&*CARGO_HOME) {
+    let mut config: Document = match fs::read_to_string(CARGO_HOME.as_path()) {
         Ok(string) => string.parse()?,
         Err(_) => Document::new(),
     };
@@ -34,7 +34,7 @@ fn main() -> anyhow::Result<()> {
     if let Some(new_alias) = opt.alias {
         let (alias, commands) = new_alias.split_once("=").unwrap();
         config["alias"][&alias] = value(commands);
-        fs::write(&*CARGO_HOME, config.to_string())?;
+        fs::write(CARGO_HOME.as_path(), config.to_string())?;
     } else {
         print_aliases(config)?;
     }
