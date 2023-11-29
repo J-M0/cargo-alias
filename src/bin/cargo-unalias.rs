@@ -23,8 +23,11 @@ fn main() -> anyhow::Result<()> {
     let cargo_home_config = PathBuf::from(env::var("CARGO_HOME")?).join("config.toml");
 
     let mut config: Document = fs::read_to_string(&cargo_home_config)?.parse()?;
-    config["alias"].as_table_mut().unwrap().remove(&opt.alias);
-    fs::write(cargo_home_config, config.to_string())?;
+
+    if config.contains_table("alias") {
+        config["alias"].as_table_mut().unwrap().remove(&opt.alias);
+        fs::write(cargo_home_config, config.to_string())?;
+    }
 
     Ok(())
 }
