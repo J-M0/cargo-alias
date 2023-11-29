@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.2
+
+### Bugs fixed
+
+- Panic when `$CARGO_HOME/config.toml` doesn't exist
+
 ## v0.2.1
 
 ### Bugs fixed
