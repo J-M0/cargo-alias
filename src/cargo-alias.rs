@@ -3,7 +3,7 @@ mod util;
 use anyhow::bail;
 use clap::Parser;
 use std::fs;
-use toml_edit::{value, Document, Item, Value};
+use toml_edit::{value, Document, Value};
 use util::CARGO_HOME;
 
 #[derive(Parser)]
@@ -43,15 +43,13 @@ fn main() -> anyhow::Result<()> {
 }
 
 fn print_aliases(config: Document) -> anyhow::Result<()> {
+    // None of the unwraps here should ever fail because
+    // cargo will validate the config and complain
+    // before we even get to run.
     for alias in config["alias"].as_table().unwrap().iter() {
         let (alias_name, val) = alias;
 
-        let val = match val {
-            Item::Value(v) => v,
-            _ => bail!("value of {} must be a list or string", alias_name),
-        };
-
-        let val = match val {
+        let val = match val.as_value().unwrap() {
             Value::String(s) => s.value().into(),
             Value::Array(a) => a
                 .iter()
