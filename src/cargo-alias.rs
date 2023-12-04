@@ -32,7 +32,7 @@ fn main() -> anyhow::Result<()> {
     }
 
     if let Some(new_alias) = opt.alias {
-        let (alias, commands) = new_alias.split_once("=").unwrap();
+        let (alias, commands) = new_alias.split_once('=').unwrap();
         config["alias"][&alias] = value(commands);
         fs::write(CARGO_HOME.as_path(), config.to_string())?;
     } else {
