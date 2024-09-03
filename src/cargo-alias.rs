@@ -59,7 +59,7 @@ fn print_aliases(config: Document) -> anyhow::Result<()> {
             _ => bail!("value of {} is not a list or string", alias_name),
         };
 
-        println!("alias {}='{}'", alias_name, val);
+        println!("cargo alias {}='{}'", alias, val);
     }
 
     Ok(())
