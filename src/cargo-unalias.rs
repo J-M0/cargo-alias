@@ -1,6 +1,6 @@
 mod util;
 
-use clap::Parser;
+use clap::{Args, Parser};
 use std::fs;
 use toml_edit::Document;
 use util::CARGO_HOME;
@@ -11,7 +11,7 @@ enum Cargo {
     Unalias(Opt),
 }
 
-#[derive(clap::Args)]
+#[derive(Args)]
 #[clap(about = "Delete cargo aliases", version)]
 struct Opt {
     /// Name of alias to delete

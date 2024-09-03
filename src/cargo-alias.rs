@@ -1,9 +1,9 @@
 mod util;
 
 use anyhow::bail;
-use clap::Parser;
+use clap::{Args, Parser};
 use std::fs;
-use toml_edit::{value, Document, Value};
+use toml_edit::{Document, Value};
 use util::CARGO_HOME;
 
 #[derive(Parser)]
@@ -12,7 +12,7 @@ enum Cargo {
     Alias(Opt),
 }
 
-#[derive(clap::Args)]
+#[derive(Args)]
 #[clap(about = "Create and view cargo aliases", version)]
 struct Opt {
     /// Alias to define. Should be in the form name='command list'
@@ -22,7 +22,7 @@ struct Opt {
 fn main() -> anyhow::Result<()> {
     let Cargo::Alias(opt) = Cargo::parse();
 
-    let mut config: Document = match fs::read_to_string(CARGO_HOME.as_path()) {
+    let mut config = match fs::read_to_string(CARGO_HOME.as_path()) {
         Ok(string) => string.parse()?,
         Err(_) => Document::new(),
     };
@@ -33,7 +33,7 @@ fn main() -> anyhow::Result<()> {
 
     if let Some(new_alias) = opt.alias {
         let (alias, commands) = new_alias.split_once('=').unwrap();
-        config["alias"][&alias] = value(commands);
+        config["alias"][&alias] = toml_edit::value(commands);
         fs::write(CARGO_HOME.as_path(), config.to_string())?;
     } else {
         print_aliases(config)?;
