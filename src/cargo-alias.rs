@@ -3,6 +3,7 @@ mod util;
 use anyhow::bail;
 use clap::{Args, Parser};
 use std::fs;
+use std::io;
 use toml_edit::{Document, Value};
 use util::CARGO_HOME;
 
@@ -24,7 +25,10 @@ fn main() -> anyhow::Result<()> {
 
     let mut config = match fs::read_to_string(CARGO_HOME.as_path()) {
         Ok(string) => string.parse()?,
-        Err(_) => Document::new(),
+        Err(e) => match e.kind() {
+            io::ErrorKind::NotFound => Document::new(),
+            _ => return Err(e.into()),
+        },
     };
 
     if !config.contains_table("alias") {
