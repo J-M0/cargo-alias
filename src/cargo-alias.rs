@@ -8,13 +8,13 @@ use toml_edit::{Document, Value};
 use util::CARGO_HOME;
 
 #[derive(Parser)]
-#[clap(name = "cargo", bin_name = "cargo")]
+#[command(name = "cargo", bin_name = "cargo")]
 enum Cargo {
     Alias(Opt),
 }
 
 #[derive(Args)]
-#[clap(about = "Create and view cargo aliases", version)]
+#[command(about = "Create and view cargo aliases", version)]
 struct Opt {
     /// Alias to define. Should be in the form name='command list'
     alias: Option<String>,

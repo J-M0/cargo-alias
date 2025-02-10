@@ -6,13 +6,13 @@ use toml_edit::Document;
 use util::CARGO_HOME;
 
 #[derive(Parser)]
-#[clap(name = "cargo", bin_name = "cargo")]
+#[command(name = "cargo", bin_name = "cargo")]
 enum Cargo {
     Unalias(Opt),
 }
 
 #[derive(Args)]
-#[clap(about = "Delete cargo aliases", version)]
+#[command(about = "Delete cargo aliases", version)]
 struct Opt {
     /// Name of alias to delete
     alias: String,
