@@ -2,7 +2,7 @@ mod util;
 
 use clap::{Args, Parser};
 use std::fs;
-use toml_edit::Document;
+use toml_edit::DocumentMut;
 use util::CARGO_HOME;
 
 #[derive(Parser)]
@@ -21,7 +21,7 @@ struct Opt {
 fn main() -> anyhow::Result<()> {
     let Cargo::Unalias(opt) = Cargo::parse();
 
-    let mut config: Document = fs::read_to_string(CARGO_HOME.as_path())?.parse()?;
+    let mut config: DocumentMut = fs::read_to_string(CARGO_HOME.as_path())?.parse()?;
 
     if config.contains_table("alias") {
         config["alias"].as_table_mut().unwrap().remove(&opt.alias);

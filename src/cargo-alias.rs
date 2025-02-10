@@ -4,7 +4,7 @@ use anyhow::bail;
 use clap::{Args, Parser};
 use std::fs;
 use std::io;
-use toml_edit::{Document, Value};
+use toml_edit::{DocumentMut, Value};
 use util::CARGO_HOME;
 
 #[derive(Parser)]
@@ -26,7 +26,7 @@ fn main() -> anyhow::Result<()> {
     let mut config = match fs::read_to_string(CARGO_HOME.as_path()) {
         Ok(string) => string.parse()?,
         Err(e) => match e.kind() {
-            io::ErrorKind::NotFound => Document::new(),
+            io::ErrorKind::NotFound => DocumentMut::new(),
             _ => return Err(e.into()),
         },
     };
@@ -46,7 +46,7 @@ fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
-fn print_aliases(config: Document) -> anyhow::Result<()> {
+fn print_aliases(config: DocumentMut) -> anyhow::Result<()> {
     // None of the unwraps here should ever fail because
     // cargo will validate the config and complain
     // before we even get to run.
