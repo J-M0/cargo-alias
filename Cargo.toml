@@ -13,7 +13,6 @@ categories = ["command-line-utilities", "development-tools::cargo-plugins"]
 [dependencies]
 anyhow = "1.0.97"
 clap = { version = "4.5.28", features = ["derive"] }
-lazy_static = "1.4.0"
 toml_edit = "0.22.23"
 
 [[bin]]
