@@ -1,8 +1,9 @@
 mod util;
 
+use anyhow::{Context, Result};
 use clap::{Args, Parser};
 use std::fs;
-use toml_edit::DocumentMut;
+use toml_edit::{DocumentMut, Item};
 use util::get_config_path;
 
 #[derive(Parser)]
@@ -21,15 +22,16 @@ struct Opt {
     alias: String,
 }
 
-fn main() -> anyhow::Result<()> {
+fn main() -> Result<()> {
     let Cargo::Unalias(opt) = Cargo::parse();
 
     let config_path = get_config_path(opt.local)?;
 
     let mut config: DocumentMut = fs::read_to_string(&config_path)?.parse()?;
 
-    if config.contains_table("alias") {
-        config["alias"].as_table_mut().unwrap().remove(&opt.alias);
+    if let Item::Table(ref mut t) = config["alias"] {
+        t.remove(&opt.alias)
+            .with_context(|| format!("alias `{}` not found", opt.alias))?;
         fs::write(&config_path, config.to_string())?;
     }
 
